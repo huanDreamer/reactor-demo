@@ -7,6 +7,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -91,5 +92,14 @@ public class FluxSample {
                 .flatMap(group -> Mono.just(group.key()).zipWith(group.count()))
                 .map(g -> "num: " + g.getT1() + "; count: " + g.getT2())
                 .subscribe(System.out::println);
+    }
+
+    @Test
+    public void testCombine() {
+        Flux.combineLatest(
+                Arrays::toString,
+                Flux.interval(Duration.ofMillis(100)).take(5),
+                Flux.interval(Duration.ofMillis(50)).take(5)
+        ).toStream().forEach(System.out::println);
     }
 }
